@@ -1,0 +1,28 @@
+class java.security.ProtectionDomain
+class java.nio.ByteOrder
+class java.nio.CharBuffer
+class java.nio.DoubleBuffer
+class java.nio.FloatBuffer
+class java.nio.IntBuffer
+class java.nio.LongBuffer
+class java.nio.MappedByteBuffer
+class java.nio.ShortBuffer
+class java.lang.Package
+class java.text*
+class java.beans*
+class java.lang.ref*
+class java.net*
+class javax*
+class org.apache*
+class org.w3c*
+class org.xml*
+class android.account*
+class android.animation*
+class android.util.Printer*
+class android.text.method.MovementMethod
+class android.view.accessibility*
+class android.view.animation*
+class com.embarcadero.firemonkey.pickers.defaults*
+class com.embarcadero.firemonkey.pickers.gingerbread*
+class android.widget.RemoteViews method setOnClickPendingIntent signature (ILandroid/app/PendingIntent;)V
+class android.widget.RemoteViews method setPendingIntentTemplate signature (ILandroid/app/PendingIntent;)V
