@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">     
+        
+    <h:head>
+        <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <title>Facelet Title</title>
+    </h:head>
+
+     <h:body>
+         
+        <h:form>
+            <hr/> 
+                <h:outputText value="#{salarioBean.titulo}" style="font-weight:bold"/>
+            <hr/>              
+            
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Salario Bruto: " for="salarioBruto" />
+                <h:inputText value="#{salarioBean.salarioBruto}" id="salarioBruto" />                
+                
+              <h:outputText value="Proventos" style="font-weight:bold"/>
+              <h:inputHidden/>
+
+                <h:outputLabel value="VR ($): " for="valorProventoVR" />
+                <h:inputText value="#{salarioBean.valorProventoVR}" id="valorProventoVR" />                
+                
+                <h:outputLabel value="VA ($): " for="valorProventoVA" />
+                <h:inputText value="#{salarioBean.valorProventoVA}" id="valorProventoVA" />                
+                
+                <h:outputLabel value="Hora extra ($): " for="valorHoraExtra" />
+                <h:inputText value="#{salarioBean.valorHoraExtra}" id="valorHoraExtra" />                                
+            
+              <h:outputText value="Descontos" style="font-weight:bold"/>
+              <h:inputHidden/>
+           
+                <h:outputLabel value="VR (%): " for="percVR" />
+                <h:inputText value="#{salarioBean.percVR}" id="percVR" />                                
+
+                <h:outputLabel value="VR ($): " for="valorDescVR" />
+                <h:inputText value="#{salarioBean.valorDescVR}" id="valorDescVR" disabled="true"/>                                
+                
+                <h:outputLabel value="VA (%): " for="percVA" />
+                <h:inputText value="#{salarioBean.percVA}" id="percVA" />                                
+                
+                <h:outputLabel value="VA ($): " for="valorDescVA" />
+                <h:inputText value="#{salarioBean.valorDescVA}" id="valorDescVA" disabled="true"/>   
+                
+                <h:outputLabel value="INSS (%): " for="percINSS" />
+                <h:inputText value="#{salarioBean.percINSS}" id="percINSS" disabled="true"/>                                                
+                
+                <h:outputLabel value="INSS ($): " for="valorDescINSS" />
+                <h:inputText value="#{salarioBean.valorDescINSS}" id="valorDescINSS" disabled="true"/>                                                
+                
+                <h:outputLabel value="Plano de saúde ($): " for="valorDescPlanoSaude" />
+                <h:inputText value="#{salarioBean.valorDescPlanoSaude}" id="valorDescPlanoSaude"/>                                                                
+                
+                <h:outputLabel value="Plano odontológico ($): " for="valorDescOdonto" />
+                <h:inputText value="#{salarioBean.valorDescOdonto}" id="valorDescOdonto"/>                                                                
+                
+                <h:outputLabel value="Faltas ($): " for="valorFalta" />
+                <h:inputText value="#{salarioBean.valorFalta}" id="valorFalta"/>                                                                
+            
+                <h:commandButton value="Calcular" action="#{salarioBean.calculaFolha}" />
+                <h:commandButton value="Limpar" action="#{salarioBean.limparDados}" />                
+            </h:panelGrid>
+            
+            <hr/> 
+              <h:outputText value="FOLHA DE PAGAMENTO" style="font-weight:bold"/>
+            <hr/> 
+            
+             Salário líquido: #{salarioBean.salarioLiquido} 
+             <br/> 
+             Total de proventos: #{salarioBean.totalProvento + salarioBean.valorProventoVA + salarioBean.valorProventoVR} 
+             (HE + VA + VR)
+             <br/> 
+             Total de descontos: #{salarioBean.totalDesconto}
+             <br/> 
+             Salário líquido virtual: #{salarioBean.salarioLiquidoVirtual}
+             
+        </h:form>        
+
+        <h:messages  />
+         
+    </h:body>
+    
+</html>
+
