@@ -1,6 +1,6 @@
 package com.bean;
 
-import com.Pessoa;
+import static com.util.Funcoes.*;
 import static com.util.Mensagem.*;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -8,10 +8,13 @@ import javax.enterprise.context.RequestScoped;
 @Named(value = "salarioBean")
 @RequestScoped
 public class SalarioBean {
-    
+    private String tituloGeral = "Geral";    
+    private String tituloProvento = "Proventos";
+    private String tituloDesconto = "Descontos";
+    private String tituloOutrosDesconto = "Outros descontos";    
     private final String titulo;
-    
-    private Pessoa pessoa;        
+    private String funcionario;
+    private int qtdeDependentes;    
     private double salarioBruto;
     private double salarioLiquido;    
     private double salarioLiquidoVirtual; //Salário + VA + VR      
@@ -33,11 +36,59 @@ public class SalarioBean {
     private double valorHoraExtra;
     private double valorFalta;    
     private double totalDesconto;    
-    private double totalProvento;  
+    private double totalProvento;
     
     public SalarioBean() {
       this.titulo = "Programa de Cálculo de Salário".toUpperCase();
     }    
+
+    public String getTituloGeral() {
+        return tituloGeral;
+    }
+
+    public void setTituloGeral(String tituloGeral) {
+        this.tituloGeral = tituloGeral;
+    }
+
+    public String getTituloProvento() {
+        return tituloProvento;
+    }
+
+    public void setTituloProvento(String tituloProvento) {
+        this.tituloProvento = tituloProvento;
+    }
+
+    public String getTituloDesconto() {
+        return tituloDesconto;
+    }
+
+    public void setTituloDesconto(String tituloDesconto) {
+        this.tituloDesconto = tituloDesconto;
+    }
+
+    public String getTituloOutrosDesconto() {
+        return tituloOutrosDesconto;
+    }
+
+    public void setTituloOutrosDesconto(String tituloOutrosDesconto) {
+        this.tituloOutrosDesconto = tituloOutrosDesconto;
+    }
+    
+    public String getFuncionario() {
+        return funcionario;
+    }
+
+    public void setFuncionario(String funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public int getQtdeDependentes() {
+        return qtdeDependentes;
+    }
+
+    public void setQtdeDependentes(int qtdeDependentes) {
+        this.qtdeDependentes = qtdeDependentes;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -66,8 +117,6 @@ public class SalarioBean {
     public void setSalarioLiquidoVirtual(double salarioLiquidoVirtual) {
         this.salarioLiquidoVirtual = salarioLiquidoVirtual;
     }
-
-    
     
     public double getSalarioBaseINSS() {
         return salarioBaseINSS;
@@ -220,66 +269,26 @@ public class SalarioBean {
     public void setTotalProvento(double totalProvento) {
         this.totalProvento = totalProvento;
     }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
-
-    private double getPercINSSTabela(double Salario){
-      double Perc = 0.0;  
-      double[] tabela = new double[6];  
-      tabela[0] = 0.0;      tabela[1] = 1556.94; //8.0%
-      tabela[2] = 1556.95;  tabela[3] = 2594.92; //9.0%
-      tabela[4] = 2594.93;  tabela[5] = 999999.99; //11.0%
-      if (Salario <= tabela[1] ) {
-        Perc = 8.0;  
-      } else if (Salario >= tabela[2] && Salario <= tabela[3] ) {
-        Perc = 9.0;            
-      } else if (Salario >= tabela[4] && Salario <= tabela[5] ) {
-        Perc = 11.0;            
-      }
-      return Perc;    
-    }
-
-    private double getPercIRPFTabela(double Salario){
-      double Perc = 0.0;  
-      double[] tabela = new double[6];  
-      tabela[0] = 0.0;      tabela[1] = 1903.98; //0.0%
-      tabela[2] = 1903.99;  tabela[3] = 2826.65; //7.5% - R$ 142,80
-      tabela[4] = 2826.66;  tabela[5] = 3751.05; //15.0% - R$ 354,80
-      tabela[6] = 3751.06;  tabela[7] = 4664.68; //22.5% - R$ 636,13
-      tabela[8] = 4664.68;  tabela[9] = 99999.99; //27.5% - R$ 869,36
-      if (Salario <= tabela[1] ) {
-        Perc = 7.5;  
-      } else if (Salario >= tabela[2] && Salario <= tabela[3] ) {
-        Perc = 15.0;            
-      } else if (Salario >= tabela[4] && Salario <= tabela[5] ) {
-        Perc = 22.5;            
-      } else if (Salario >= tabela[6] && Salario <= tabela[7] ) {
-        Perc = 27.5;            
-      }
-      return Perc;    
-    }
-    
-    private double getValorAbonoDependentes(){
-        return 0.0 * pessoa.getQtdeDependentes();
-    }
-    
+   
     private void calculaDescontosINSS(){  
       this.salarioBaseINSS = this.salarioBruto + this.valorHoraExtra;      
+      this.salarioBaseINSS = ArredondaDuasCasas(this.salarioBaseINSS);      
       this.percINSS = getPercINSSTabela(this.salarioBaseINSS);            
       this.valorDescINSS = this.salarioBaseINSS * (this.percINSS / 100);        
+      this.valorDescINSS = ArredondaDuasCasas(this.valorDescINSS);
     }    
     
     private void calculaDescontosIRPF(){  
-      this.salarioBaseIRPF = this.salarioBruto + this.valorHoraExtra - 
-                             this.valorDescINSS - getValorAbonoDependentes();      
-      //this.percIRPF = getPercIRPFTabela(this.salarioBaseIRPF);                  
-      this.valorDescIRPF = this.salarioBaseIRPF * (this.percIRPF / 100);      
+      double valorAbonoDep;
+      double salarioBaseDeducaIRPF;   
+      salarioBaseDeducaIRPF = this.salarioBruto + this.valorHoraExtra - 
+                              this.valorDescINSS;
+      valorAbonoDep = getDeducaoIRPFTabela(salarioBaseDeducaIRPF) * this.qtdeDependentes;
+      this.salarioBaseIRPF = salarioBaseDeducaIRPF - valorAbonoDep;
+      this.salarioBaseIRPF = ArredondaDuasCasas(this.salarioBaseIRPF);
+      this.percIRPF = getPercIRPFTabela(this.salarioBaseIRPF);                  
+      this.valorDescIRPF = this.salarioBaseIRPF * (this.percIRPF / 100); 
+      this.valorDescIRPF = ArredondaDuasCasas(this.valorDescIRPF);
     }    
     
     private void calculaDescontos(){  
@@ -287,21 +296,26 @@ public class SalarioBean {
       calculaDescontosIRPF();
       //VA
       this.valorDescVA = this.valorProventoVA * (this.percVA / 100);
+      this.valorDescVA = ArredondaDuasCasas(this.valorDescVA);
       //VR
       this.valorDescVR = this.valorProventoVR * (this.percVR / 100);
+      this.valorDescVR = ArredondaDuasCasas(this.valorDescVR);      
     }
     
     public void calculaFolha(){
       calculaDescontos();      
       this.totalDesconto = this.valorDescIRPF + this.valorDescINSS + 
-                  this.valorDescVR + this.valorDescVA + 
-                  this.valorDescPlanoSaude + this.valorDescOdonto +
-                  this.valorFalta;         
+                           this.valorDescVR + this.valorDescVA + 
+                           this.valorDescPlanoSaude + this.valorDescOdonto +
+                           this.valorFalta;  
       this.totalProvento = this.valorHoraExtra;
+      this.totalProvento = ArredondaDuasCasas(this.totalProvento);
       this.salarioLiquido = this.salarioBruto - this.totalDesconto + this.totalProvento;
+      this.salarioLiquido = ArredondaDuasCasas(this.salarioLiquido);
       this.salarioLiquidoVirtual = this.salarioLiquido + 
                                    this.valorProventoVA + 
                                    this.valorProventoVR;
+      this.salarioLiquidoVirtual = ArredondaDuasCasas(this.salarioLiquidoVirtual);
       
       MsgCalculoOk();
     }
@@ -309,5 +323,11 @@ public class SalarioBean {
     public void limparDados(){
         MsgLimpezaOK();
     }
+
+    public String getMensagemHTML(){
+        String html = "";
+        html = "<span class=\"badge badge-warning\"> MENSAGEM DE TESTE </span>";
+        return html;
+    }  
     
 }

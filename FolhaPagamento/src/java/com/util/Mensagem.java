@@ -15,5 +15,6 @@ public class Mensagem {
     
     public static void MsgCalculoOk(){
       ShowMessage("Calculo realizado com sucesso!");
-    }        
+    }      
+    
 }
