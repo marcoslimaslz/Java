@@ -1,5 +1,6 @@
 package com.bean;
 
+import static com.util.Constantes.*;
 import static com.util.Funcoes.*;
 import static com.util.Mensagem.*;
 import javax.inject.Named;
@@ -17,7 +18,6 @@ public class SalarioBean {
     private int qtdeDependentes;    
     private double salarioBruto;
     private double salarioLiquido;    
-    private double salarioLiquidoVirtual; //Salário + VA + VR      
     private double salarioBaseINSS;        
     private double salarioBaseIRPF;            
     private double salarioBaseFGTS;  
@@ -37,6 +37,12 @@ public class SalarioBean {
     private double valorFalta;    
     private double totalDesconto;    
     private double totalProvento;
+    private double totalProventoGeral;
+    private final double valorDeducaoDependente = 189.59;
+    private double valorOutrosProventos1;
+    private double valorOutrosProventos2;
+    private double valorOutrosDescontos1;
+    private double valorOutrosDescontos2;
     
     public SalarioBean() {
       this.titulo = "Programa de Cálculo de Salário".toUpperCase();
@@ -110,14 +116,6 @@ public class SalarioBean {
         this.salarioLiquido = salarioLiquido;
     }
 
-    public double getSalarioLiquidoVirtual() {
-        return salarioLiquidoVirtual;
-    }
-
-    public void setSalarioLiquidoVirtual(double salarioLiquidoVirtual) {
-        this.salarioLiquidoVirtual = salarioLiquidoVirtual;
-    }
-    
     public double getSalarioBaseINSS() {
         return salarioBaseINSS;
     }
@@ -269,7 +267,47 @@ public class SalarioBean {
     public void setTotalProvento(double totalProvento) {
         this.totalProvento = totalProvento;
     }
-   
+
+    public double getTotalProventoGeral() {
+        return totalProventoGeral;
+    }
+
+    public void setTotalProventoGeral(double totalProventoGeral) {
+        this.totalProventoGeral = totalProventoGeral;
+    }
+
+    public double getValorOutrosProventos1() {
+        return valorOutrosProventos1;
+    }
+
+    public void setValorOutrosProventos1(double valorOutrosProventos1) {
+        this.valorOutrosProventos1 = valorOutrosProventos1;
+    }
+
+    public double getValorOutrosProventos2() {
+        return valorOutrosProventos2;
+    }
+
+    public void setValorOutrosProventos2(double valorOutrosProventos2) {
+        this.valorOutrosProventos2 = valorOutrosProventos2;
+    }
+
+    public double getValorOutrosDescontos1() {
+        return valorOutrosDescontos1;
+    }
+
+    public void setValorOutrosDescontos1(double valorOutrosDescontos1) {
+        this.valorOutrosDescontos1 = valorOutrosDescontos1;
+    }
+
+    public double getValorOutrosDescontos2() {
+        return valorOutrosDescontos2;
+    }
+
+    public void setValorOutrosDescontos2(double valorOutrosDescontos2) {
+        this.valorOutrosDescontos2 = valorOutrosDescontos2;
+    }
+
     private void calculaDescontosINSS(){  
       this.salarioBaseINSS = this.salarioBruto + this.valorHoraExtra;      
       this.salarioBaseINSS = ArredondaDuasCasas(this.salarioBaseINSS);      
@@ -280,48 +318,66 @@ public class SalarioBean {
     
     private void calculaDescontosIRPF(){  
       double valorAbonoDep;
-      double salarioBaseDeducaIRPF;   
-      salarioBaseDeducaIRPF = this.salarioBruto + this.valorHoraExtra - 
-                              this.valorDescINSS;
-      valorAbonoDep = getDeducaoIRPFTabela(salarioBaseDeducaIRPF) * this.qtdeDependentes;
-      this.salarioBaseIRPF = salarioBaseDeducaIRPF - valorAbonoDep;
+      valorAbonoDep = this.valorDeducaoDependente * this.qtdeDependentes;      
+      valorAbonoDep = ArredondaDuasCasas(valorAbonoDep);
+      
+      this.salarioBaseIRPF = this.salarioBruto + this.valorHoraExtra - 
+                             this.valorDescINSS - valorAbonoDep;
       this.salarioBaseIRPF = ArredondaDuasCasas(this.salarioBaseIRPF);
+      
       this.percIRPF = getPercIRPFTabela(this.salarioBaseIRPF);                  
-      this.valorDescIRPF = this.salarioBaseIRPF * (this.percIRPF / 100); 
+      
+      this.valorDescIRPF = (this.salarioBaseIRPF * (this.percIRPF / 100)) - getDeducaoIRPFTabela(this.percIRPF); 
       this.valorDescIRPF = ArredondaDuasCasas(this.valorDescIRPF);
     }    
     
-    private void calculaDescontos(){  
-      calculaDescontosINSS();
-      calculaDescontosIRPF();
-      //VA
+    private void calculaDescontosVA(){  
       this.valorDescVA = this.valorProventoVA * (this.percVA / 100);
       this.valorDescVA = ArredondaDuasCasas(this.valorDescVA);
-      //VR
+    }
+    
+    private void calculaDescontosVR(){  
       this.valorDescVR = this.valorProventoVR * (this.percVR / 100);
       this.valorDescVR = ArredondaDuasCasas(this.valorDescVR);      
     }
     
+    private void calculaDescontos(){
+        calculaDescontosVA();  
+        calculaDescontosVR();        
+        calculaDescontosINSS();
+        calculaDescontosIRPF();        
+        this.totalDesconto = this.valorDescIRPF + this.valorDescINSS + 
+                             this.valorDescVR + this.valorDescVA + 
+                             this.valorDescPlanoSaude + this.valorDescOdonto +
+                             this.valorFalta + this.valorOutrosDescontos1 + 
+                             this.valorOutrosDescontos2;          
+    }
+    
+    private void calculaProventos(){
+        //Total Proventos
+        this.totalProvento = this.salarioBruto + this.valorHoraExtra + 
+                             this.valorOutrosProventos1 + this.valorOutrosProventos2;
+        this.totalProvento = ArredondaDuasCasas(this.totalProvento);
+        //Salario Liquido
+        this.salarioLiquido = this.totalProvento - this.totalDesconto;
+        this.salarioLiquido = ArredondaDuasCasas(this.salarioLiquido);
+        //Total Proventos geral        
+        this.totalProventoGeral = this.totalProvento + this.valorProventoVA + 
+                                  this.valorProventoVR;
+        this.totalProventoGeral = ArredondaDuasCasas(this.totalProventoGeral);                
+    }   
+    
     public void calculaFolha(){
-      calculaDescontos();      
-      this.totalDesconto = this.valorDescIRPF + this.valorDescINSS + 
-                           this.valorDescVR + this.valorDescVA + 
-                           this.valorDescPlanoSaude + this.valorDescOdonto +
-                           this.valorFalta;  
-      this.totalProvento = this.valorHoraExtra;
-      this.totalProvento = ArredondaDuasCasas(this.totalProvento);
-      this.salarioLiquido = this.salarioBruto - this.totalDesconto + this.totalProvento;
-      this.salarioLiquido = ArredondaDuasCasas(this.salarioLiquido);
-      this.salarioLiquidoVirtual = this.salarioLiquido + 
-                                   this.valorProventoVA + 
-                                   this.valorProventoVR;
-      this.salarioLiquidoVirtual = ArredondaDuasCasas(this.salarioLiquidoVirtual);
-      
-      MsgCalculoOk();
+      if (this.salarioBruto > 0.0){
+        calculaDescontos();       
+        calculaProventos();
+      } else {
+        MsgCalculoErro(validaSalarioBruto);          
+      }  
     }
     
     public void limparDados(){
-        MsgLimpezaOK();
+      //
     }
 
     public String getMensagemHTML(){
@@ -329,5 +385,9 @@ public class SalarioBean {
         html = "<span class=\"badge badge-warning\"> MENSAGEM DE TESTE </span>";
         return html;
     }  
+
+    public String getMsgSalarioBruto(){
+        return validaSalarioBruto;
+    }
     
 }

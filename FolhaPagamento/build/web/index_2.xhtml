@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">     
+    
+    <h:head>
+      <title>Facelet Title</title>              
+      
+        <link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet"/>
+        <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>        
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="css/estilo.css" rel="stylesheet"/>    
+        
+    </h:head>
+
+     <h:body>
+                 
+        <h:form>
+            <!-- 
+            <hr/> 
+                <h:outputText value="#{salarioBean.titulo}" style="font-weight:bold"/>
+            <hr/>              
+            -->
+            
+            <h:panelGrid columns="2" style="width:30%; margin: 0 auto;vertical-align:top;" border="0" >
+                <span class="badge badge-warning"> Geral &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <h:inputHidden/>
+
+                <h:outputLabel value="Funcionário: " for="funcionario"/>
+                <h:inputText value="#{salarioBean.funcionario}" id="funcionario"/>
+
+                <h:outputLabel value="Qtde. de dependentes: " for="qtdeDependentes" />
+                <h:inputText value="#{salarioBean.qtdeDependentes}" id="qtdeDependentes" />                
+                
+                <h:outputLabel value="Salario Bruto: " for="salarioBruto" />
+                <h:inputText value="#{salarioBean.salarioBruto}" id="salarioBruto" required="true" requiredMessage="#{salarioBean.getMsgSalarioBruto()}"/>
+
+              <span class="badge badge-warning">#{salarioBean.tituloProvento}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <h:inputHidden/>
+
+                <h:outputLabel value="VR ($): " for="valorProventoVR" />
+                <h:inputText value="#{salarioBean.valorProventoVR}" id="valorProventoVR" />                
+                
+                <h:outputLabel value="VA ($): " for="valorProventoVA" />
+                <h:inputText value="#{salarioBean.valorProventoVA}" id="valorProventoVA" />                
+                
+                <h:outputLabel value="Hora extra ($): " for="valorHoraExtra" />
+                <h:inputText value="#{salarioBean.valorHoraExtra}" id="valorHoraExtra" />                                
+
+              <span class="badge badge-warning">#{salarioBean.tituloDesconto}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>              
+              <h:inputHidden/>
+           
+                <h:outputLabel value="VR (%): " for="percVR" />
+                <h:inputText value="#{salarioBean.percVR}" id="percVR" />                                
+
+                <h:outputLabel value="VR ($): " for="valorDescVR" />
+                <span class="badge badge-warning">#{salarioBean.valorDescVR}</span>
+                
+                <h:outputLabel value="VA (%): " for="percVA" />
+                <h:inputText value="#{salarioBean.percVA}" id="percVA" />                                
+                
+                <h:outputLabel value="VA ($): " for="valorDescVA" />
+                <span class="badge badge-warning">#{salarioBean.valorDescVA}</span>
+                
+                <h:outputLabel value="Saláio base INSS ($): " for="salarioBaseINSS" />
+                <span class="badge badge-warning">#{salarioBean.salarioBaseINSS}</span>
+                
+                <h:outputLabel value="INSS (%): " for="percINSS" />
+                <span class="badge badge-warning">#{salarioBean.percINSS}</span>
+                
+                <h:outputLabel value="INSS ($): " for="valorDescINSS" />
+                <span class="badge badge-warning">#{salarioBean.valorDescINSS}</span>
+                
+                <h:outputLabel value="Saláio base IRPF ($): " for="salarioBaseIRPF" />
+                <span class="badge badge-warning">#{salarioBean.salarioBaseIRPF} </span>
+
+                <h:outputLabel value="IRPF (%): " for="percIRPF" />
+                <span class="badge badge-warning">#{salarioBean.percIRPF}</span>
+                
+                <h:outputLabel value="IRPF ($): " for="valorDescIRPF" />
+                <span class="badge badge-warning">#{salarioBean.valorDescIRPF}</span>
+
+                <h:outputLabel value="Plano de saúde ($): " for="valorDescPlanoSaude" />
+                <h:inputText value="#{salarioBean.valorDescPlanoSaude}" id="valorDescPlanoSaude"/>                                                                
+                
+                <h:outputLabel value="Plano odontológico ($): " for="valorDescOdonto" />
+                <h:inputText value="#{salarioBean.valorDescOdonto}" id="valorDescOdonto"/>                                                                
+                
+                <h:outputLabel value="Faltas ($): " for="valorFalta" />
+                <h:inputText value="#{salarioBean.valorFalta}" id="valorFalta"/>
+
+            </h:panelGrid>                
+            
+            <br/>
+            
+            <h:panelGrid columns="2" style="width:15%; margin: 0 auto;vertical-align:top;" border="0" >
+                <h:commandButton value="Calcular" action="#{salarioBean.calculaFolha}" styleClass="btn btn-primary"/>                
+                <h:commandButton value="Limpar" action="#{salarioBean.limparDados}" styleClass="btn"/>
+            </h:panelGrid>
+            
+            <!--             
+            <hr/> 
+                <h:outputText value="FOLHA DE PAGAMENTO" style="font-weight:bold"/>
+            <hr/> 
+            -->
+            
+            <br/> 
+            
+            <h:panelGrid columns="2" style="width:40%; margin: 0 auto;vertical-align:top;" border="0" >             
+              <h:outputLabel value="Salário líquido:"/>
+              <span class="badge badge-warning"> 
+                  #{salarioBean.salarioLiquido} 
+              </span> 
+              
+              <h:outputLabel value="Total de proventos:"/>    
+              <span class="badge badge-warning"> 
+                  #{salarioBean.totalProventoGeral}
+              </span> 
+              (HE + VA + VR) 
+              
+              <h:outputLabel value="Total de descontos:"/>
+              <span class="badge badge-warning">
+                  #{salarioBean.totalDesconto} 
+              </span> 
+              
+            </h:panelGrid>              
+            
+            <br/> 
+              
+            <h:panelGrid columns="2" style="width:40%; margin: 0 auto;vertical-align:top;" border="0" >            
+              <span class="badge badge-info">
+                <h:messages  />
+              </span>  
+              <h:inputHidden/>
+         
+              
+              <!--
+              <h2>
+                <h:outputText value="#{salarioBean.getMensagemHTML()}" escape="false" />
+              </h2>
+              -->
+              
+            </h:panelGrid>
+
+     </h:form>    
+    </h:body>
+    
+</html>
+

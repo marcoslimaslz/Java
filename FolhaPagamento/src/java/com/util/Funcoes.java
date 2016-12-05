@@ -26,26 +26,18 @@ public class Funcoes {
       return Perc;    
     }
     
-    public static double getDeducaoIRPFTabela(double Salario){    
-      double Valor = 0.0;  
-      double[] tabela = new double[10];  
-      tabela[0] = 0.0;      tabela[1] = 1903.98;  //00.0% - R$ 000.00
-      tabela[2] = 1903.99;  tabela[3] = 2826.65;  //07.5% - R$ 142,80
-      tabela[4] = 2826.66;  tabela[5] = 3751.05;  //15.0% - R$ 354,80
-      tabela[6] = 3751.06;  tabela[7] = 4664.68;  //22.5% - R$ 636,13
-      tabela[8] = 4664.68;  tabela[9] = 99999.99; //27.5% - R$ 869,36
-      if (Salario >= tabela[0] && Salario <= tabela[1] ) {
-        Valor = 0.0;
-      } else if (Salario >= tabela[2] && Salario <= tabela[3] ) {
-        Valor = 142.80;
-      } else if (Salario >= tabela[4] && Salario <= tabela[5] ) {
-        Valor = 354.80;
-      } else if (Salario >= tabela[6] && Salario <= tabela[7] ) {
-        Valor = 636.13;
-      } else if (Salario >= tabela[8] && Salario <= tabela[9] ) {
-        Valor = 869.36;
-      }
-      return Valor;    
+    public static double getDeducaoIRPFTabela(double Percentual){    
+        double Valor = 0.0;  
+        if (Percentual == 7.5) {
+          Valor = 142.80;
+        } else if (Percentual == 15.0) {
+          Valor = 354.80;
+        } else if (Percentual == 22.5) {
+          Valor = 636.13;
+        } else if (Percentual == 27.5) {
+          Valor = 869.36;
+        }
+        return Valor;    
     }
     
     public static double getPercINSSTabela(double Salario){
